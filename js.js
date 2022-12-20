@@ -14,7 +14,7 @@ let oldInputValue;
 
 //------------------Funçoes------------------
 //criaçao de div para adicionar task e seus botoes
-const saveTodo = (text) => {
+const saveTodo = (text, done = 0, save = 1) => {
   const todo = document.createElement('div');
   todo.classList.add('todo');
 
