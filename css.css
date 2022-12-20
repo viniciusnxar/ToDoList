@@ -1,3 +1,13 @@
 *{
     font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    box-sizing: border-box;
+}
+
+body{
+    background-image: url(IMG/beautiful-evening-landscape-minimal-4k_1608658977.jpg);
+    background-position-x: center;
+    background-size: cover;
 }
