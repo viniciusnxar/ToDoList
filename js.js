@@ -18,9 +18,9 @@ const saveTodo = (text, done = 0, save = 1) => {
   const todo = document.createElement('div');
   todo.classList.add('todo');
 
-  const todoTittle = document.createElement('h3');
-  todoTittle.innerText = text;
-  todo.appendChild(todoTittle);
+  const todoTitle = document.createElement('h3');
+  todoTitle.innerText = text;
+  todo.appendChild(todoTitle);
 
   const doneBtn = document.createElement('button');
   doneBtn.classList.add('finish-todo');
@@ -62,9 +62,9 @@ const updateTodo = (text) => {
   const todos = document.querySelectorAll('.todo');
 
   todos.forEach((todo) => {
-    let todoTittle = todo.querySelector('h3');
-    if (todoTittle.innerText === oldInputValue) {
-      todoTittle.innerText = text;
+    let todoTitle = todo.querySelector('h3');
+    if (todoTitle.innerText === oldInputValue) {
+      todoTitle.innerText = text;
       // Utilizando dados da localStorage
       updateTodoLocalStorage(oldInputValue, text);
     }
@@ -139,9 +139,9 @@ document.addEventListener('click', (e) => {
   const parentEl = targetEl.closest('div');
 
   //se o 'elemento pai' existe, checagem de pre-requisito para ter um titulo
-  let todoTittle;
+  let todoTitle;
   if (parentEl && parentEl.querySelector('h3')) {
-    todoTittle = parentEl.querySelector('h3').innerText;
+    todoTitle = parentEl.querySelector('h3').innerText || '';
   }
 
   //botao de feito
@@ -149,17 +149,19 @@ document.addEventListener('click', (e) => {
     //ao clicar no botao 'feito', ele vai para a classe done
     //usa o toggle ao inves de "add" para finalizar e desfinalizar
     parentEl.classList.toggle('done');
+    updateTodoStatusLocalStorage(todoTitle);
   }
   //botao de remover
   if (targetEl.classList.contains('remove-todo')) {
     parentEl.remove();
+    removeTodoLocalStorage(todoTitle);
   }
   //botao de editar
   if (targetEl.classList.contains('edit-todo')) {
     toggleForms();
 
-    editIput.value = todoTittle;
-    oldInputValue = todoTittle;
+    editIput.value = todoTitle;
+    oldInputValue = todoTitle;
   }
 });
 
@@ -170,7 +172,7 @@ cancelEditBtn.addEventListener('click', (e) => {
   toggleForms();
 });
 
-//botao de adionar adiçao
+//botao de adionar ediçao
 editForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -213,7 +215,7 @@ const loadTodos = () => {
   const todos = getTodosLocalStorage();
 
   todos.forEach((todo) => {
-    saveTodo(todo.text, todo.done, 0);
+    saveTodo(todo.text, todo.done, 1);
   });
 };
 
