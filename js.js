@@ -1,4 +1,4 @@
-//Seleçao de elementos
+//------------------Seleçao de elementos------------------
 const todoForm = document.querySelector('#todo-form');
 //SHIFT+ALT+ PRA BAIXO
 //seleciona o igual e "CTRL+D" para selecionar a outra sequencia ao mesmo tempo
@@ -7,8 +7,9 @@ const todoList = document.querySelector('#todo-list');
 const editForm = document.querySelector('#edit-form');
 const editIput = document.querySelector('#edit-input');
 const cancelEditBtn = document.querySelector('#cancel-edit-btn');
+let oldInputValue;
 
-//Funçoes
+//------------------Funçoes------------------
 //criaçao de div para adicionar task e seus botoes
 const saveTodo = (text) => {
   const todo = document.createElement('div');
@@ -39,8 +40,24 @@ const saveTodo = (text) => {
   todoInput.value = '';
   todoInput.focus();
 };
+const toggleForms = () => {
+  editForm.classList.toggle('hide');
+  todoForm.classList.toggle('hide');
+  todoList.classList.toggle('hide');
+};
 
-//Eventos
+const updateTodo = (text) => {
+  const todos = document.querySelectorAll('.todo');
+
+  todos.forEach((todo) => {
+    let todoTittle = todo.querySelector('h3');
+    if (todoTittle.innerText === oldInputValue) {
+      todoTittle.innerText = text;
+    }
+  });
+};
+
+//------------------Eventos------------------
 //Salvando o que esta no imput
 todoForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -59,13 +76,46 @@ document.addEventListener('click', (e) => {
   //pega a div mais proxima
   const parentEl = targetEl.closest('div');
 
+  //se o 'elemento pai' existe, checagem de pre-requisito para ter um titulo
+  let todoTittle;
+  if (parentEl && parentEl.querySelector('h3')) {
+    todoTittle = parentEl.querySelector('h3').innerText;
+  }
+
+  //botao de feito
   if (targetEl.classList.contains('finish-todo')) {
     //ao clicar no botao 'feito', ele vai para a classe done
     //usa o toggle ao inves de "add" para finalizar e desfinalizar
     parentEl.classList.toggle('done');
   }
-
+  //botao de remover
   if (targetEl.classList.contains('remove-todo')) {
     parentEl.remove();
   }
+  //botao de editar
+  if (targetEl.classList.contains('edit-todo')) {
+    toggleForms();
+
+    editIput.value = todoTittle;
+    oldInputValue = todoTittle;
+  }
+});
+
+//botao cancelar ediçao
+cancelEditBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  toggleForms();
+});
+
+//botao de adionar adiçao
+editForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const editInputValue = editIput.value;
+  if (editInputValue) {
+    //atualizar
+    updateTodo(editInputValue);
+  }
+  toggleForms();
 });
